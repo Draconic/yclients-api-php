@@ -536,6 +536,33 @@ class YclientsApi
     }
 
     /**
+     * Получить основные показатели компании
+     *
+     * @return array
+     * @access public
+     * @see https://developers.yclients.com/ru/#tag/Analitika/paths/~1company~1%7Bcompany_id%7D~1analytics~1overall~1/get
+     * @throws YclientsException
+     */
+    public function getAnalytics($companyId, $dateFrom, $dateTo, $userToken)
+    {
+        if(!$companyId) {
+            throw new YclientsException('getAnalytics() требует ID компании');
+        }
+
+        if(empty($userToken)) {
+            throw new YclientsException('getAnalytics() требует авторизации по токену пользователя');
+        }
+
+        $parameters = [
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
+        ];
+
+        return $this->request('company/' . $companyId . '/analytics/overall/', $parameters,
+            self::METHOD_GET, $userToken);
+    }
+
+    /**
      * Получить список компаний
      *
      * @param integer $groupId - ID сети компаний
