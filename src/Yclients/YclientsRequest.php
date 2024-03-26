@@ -261,17 +261,20 @@ trait YclientsRequest
      */
     protected function throttleCurl($curl)
     {
-        do {
-            $usleep = (int) (1E6 * ($this->lastRequestTime + 1/$this->throttle - microtime(true)));
-            if ($usleep <= 0) {
-                break;
-            }
+        if($this->throttle > 0)
+        {
+            do {
+                $usleep = (int) (1E6 * ($this->lastRequestTime + 1/$this->throttle - microtime(true)));
+                if ($usleep <= 0) {
+                    break;
+                }
 
-            $throttleTime = sprintf('%0.4f', $usleep/1E6);
-            $this->debug("[{$this->requestCounter}] ++++ THROTTLE ({$this->throttle}) {$throttleTime}s");
+                $throttleTime = sprintf('%0.4f', $usleep/1E6);
+                $this->debug("[{$this->requestCounter}] ++++ THROTTLE ({$this->throttle}) {$throttleTime}s");
 
-            usleep($usleep);
-        } while (false);
+                usleep($usleep);
+            } while (false);
+        }
 
         $this->lastRequestTime = microtime(true);
 
